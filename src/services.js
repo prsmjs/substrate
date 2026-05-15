@@ -63,7 +63,7 @@ export async function bootServices(config, manifests) {
 
   if (config.postgres) {
     const { WorkflowEngine } = await import("@prsm/workflow");
-    const { default: postgresDriver } = await import("@prsm/workflow/postgres");
+    const { postgresDriver } = await import("@prsm/workflow/postgres");
     const storage = postgresDriver({
       connectionString: config.postgres.url,
       ...config.workflow?.storage,
