@@ -9,10 +9,12 @@ export default function register(engine) {
       steps: {
         "say-hello": {
           type: "activity",
+          next: "done",
           async run({ input }) {
             return { message: `hello, ${input.name}` };
           },
         },
+        done: { type: "terminal" },
       },
     }),
   );
