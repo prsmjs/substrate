@@ -31,6 +31,7 @@ export async function bootServices(config, manifests) {
     realtime: null,
     workflow: null,
     cells: null,
+    auth: null,
   };
   const cleanups = [];
 
@@ -86,6 +87,42 @@ export async function bootServices(config, manifests) {
       redis: ioredisOpts(config.redis),
     });
     cleanups.push(() => services.cells.destroy?.().catch?.(() => {}));
+  }
+
+  if (config.auth && services.pg) {
+    const eaccess = await import("@eaccess/auth");
+    const { default: session } = await import("express-session");
+
+    const { session: sessionOpts = {}, roles, tablePrefix, providers, createUser, ...rest } = config.auth;
+
+    if (!sessionOpts.secret) {
+      throw new Error("config.auth.session.secret is required when auth is enabled");
+    }
+
+    const authConfig = {
+      db: services.pg,
+      ...(tablePrefix ? { tablePrefix } : {}),
+      ...(providers ? { providers } : {}),
+      ...(createUser ? { createUser } : {}),
+      ...rest,
+    };
+
+    await eaccess.createAuthTables(authConfig);
+
+    const roleMap = Array.isArray(roles) && roles.length > 0
+      ? eaccess.defineRoles(...roles)
+      : null;
+
+    services.auth = {
+      config: authConfig,
+      roles: roleMap,
+      sessionMiddleware: session({
+        resave: false,
+        saveUninitialized: false,
+        ...sessionOpts,
+      }),
+      authMiddleware: eaccess.createAuthMiddleware(authConfig),
+    };
   }
 
   for (const m of manifests) {

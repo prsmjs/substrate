@@ -19,6 +19,12 @@ export async function createSubstrate(config) {
     services,
   };
 
+  if (services.auth) {
+    app.use(express.json());
+    app.use(services.auth.sessionMiddleware);
+    app.use(services.auth.authMiddleware);
+  }
+
   await mountApps(app, manifests, context);
 
   let httpServer = null;

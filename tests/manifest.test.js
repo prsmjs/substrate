@@ -36,6 +36,16 @@ describe("defineApp", () => {
     expect(() => defineApp({ name: "foo", channels: [1, 2] })).toThrow(/channels entries must be strings/);
   });
 
+  it("validates auth.scopes is a string array", () => {
+    expect(() => defineApp({ name: "foo", auth: { scopes: "admin" } })).toThrow(/auth.scopes must be an array/);
+    expect(() => defineApp({ name: "foo", auth: { scopes: [1] } })).toThrow(/auth.scopes entries must be strings/);
+  });
+
+  it("rejects auth that is not an object", () => {
+    expect(() => defineApp({ name: "foo", auth: "nope" })).toThrow(/auth must be an object/);
+    expect(() => defineApp({ name: "foo", auth: ["admin"] })).toThrow(/auth must be an object/);
+  });
+
   it("accepts the full schema", () => {
     const m = defineApp({
       name: "foo",

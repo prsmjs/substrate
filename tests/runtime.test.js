@@ -38,6 +38,7 @@ describe("createSubstrate without infrastructure", () => {
       realtime: false,
       workflow: false,
       cells: false,
+      auth: false,
     });
   });
 

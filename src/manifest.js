@@ -37,8 +37,20 @@ export function defineApp(manifest) {
       }
     }
   }
-  if (manifest.auth != null && typeof manifest.auth !== "object") {
-    throw new Error("defineApp: auth must be an object");
+  if (manifest.auth != null) {
+    if (typeof manifest.auth !== "object" || Array.isArray(manifest.auth)) {
+      throw new Error("defineApp: auth must be an object");
+    }
+    if (manifest.auth.scopes != null) {
+      if (!Array.isArray(manifest.auth.scopes)) {
+        throw new Error("defineApp: auth.scopes must be an array of strings");
+      }
+      for (const s of manifest.auth.scopes) {
+        if (typeof s !== "string") {
+          throw new Error("defineApp: auth.scopes entries must be strings");
+        }
+      }
+    }
   }
 
   for (const key of Object.keys(manifest)) {

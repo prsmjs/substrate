@@ -12,4 +12,17 @@ export default {
   postgres: {
     url: process.env.DATABASE_URL ?? "postgres://substrate:substrate@localhost:5432/substrate",
   },
+  auth: {
+    session: {
+      secret: process.env.SESSION_SECRET ?? "substrate-dev-secret-change-me",
+      name: "substrate.sid",
+      cookie: {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+      },
+    },
+    tablePrefix: "auth_",
+    roles: ["user", "admin"],
+  },
 };
