@@ -20,6 +20,36 @@ describe("defineApp", () => {
     expect(() => defineApp(null)).toThrow();
     expect(() => defineApp("foo")).toThrow();
   });
+
+  it("rejects unknown fields", () => {
+    expect(() => defineApp({ name: "foo", weirdo: 1 })).toThrow(/unknown field "weirdo"/);
+  });
+
+  it("requires routes/workflows/cells/migrations to be strings", () => {
+    expect(() => defineApp({ name: "foo", routes: 42 })).toThrow(/routes must be a relative path string/);
+    expect(() => defineApp({ name: "foo", workflows: {} })).toThrow(/workflows must be a relative path string/);
+    expect(() => defineApp({ name: "foo", cells: [] })).toThrow(/cells must be a relative path string/);
+  });
+
+  it("requires records/channels to be string arrays", () => {
+    expect(() => defineApp({ name: "foo", records: "nope" })).toThrow(/records must be an array/);
+    expect(() => defineApp({ name: "foo", channels: [1, 2] })).toThrow(/channels entries must be strings/);
+  });
+
+  it("accepts the full schema", () => {
+    const m = defineApp({
+      name: "foo",
+      basePath: "/foo",
+      routes: "./routes.js",
+      workflows: "./workflows.js",
+      cells: "./cells.js",
+      records: ["foo/*"],
+      channels: ["foo/*"],
+      migrations: "./migrations",
+      auth: { scopes: ["foo:read"] },
+    });
+    expect(m.name).toBe("foo");
+  });
 });
 
 describe("loadManifests", () => {

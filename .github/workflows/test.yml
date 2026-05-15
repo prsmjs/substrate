@@ -3,6 +3,33 @@ on: [push, pull_request]
 jobs:
   test:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: substrate
+          POSTGRES_USER: substrate
+          POSTGRES_PASSWORD: substrate
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U substrate -d substrate"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+    env:
+      SUBSTRATE_INTEGRATION: "1"
+      DATABASE_URL: postgres://substrate:substrate@localhost:5432/substrate
+      REDIS_URL: redis://localhost:6379
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

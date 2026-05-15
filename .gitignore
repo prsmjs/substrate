@@ -3,3 +3,5 @@ types
 .DS_Store
 coverage
 *.log
+.handoff
+
