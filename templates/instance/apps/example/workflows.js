@@ -14,7 +14,7 @@ export default function register(engine) {
             return { message: `hello, ${input.name}` };
           },
         },
-        done: { type: "terminal" },
+        done: { type: "succeed" },
       },
     }),
   );
