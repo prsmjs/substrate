@@ -1,0 +1,65 @@
+{
+  "name": "@prsm/substrate",
+  "version": "0.0.0",
+  "description": "Distribution for stamping out independent, isolated personal-software platforms - one per client, one per project. Each instance is its own repo with its own Redis, Postgres, and apps. Bundles a runtime, a CLI, and a project template.",
+  "type": "module",
+  "bin": {
+    "substrate": "./cli/index.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "default": "./src/index.js"
+    },
+    "./client": {
+      "types": "./types/client.d.ts",
+      "default": "./src/client.js"
+    }
+  },
+  "types": "./types/index.d.ts",
+  "files": [
+    "src",
+    "cli",
+    "templates",
+    "types"
+  ],
+  "scripts": {
+    "test": "vitest --reporter=verbose --run",
+    "test:watch": "vitest",
+    "prepublishOnly": "npx tsc --declaration --allowJs --emitDeclarationOnly --skipLibCheck --target es2020 --module nodenext --moduleResolution nodenext --strict false --esModuleInterop true --outDir ./types src/index.js src/client.js"
+  },
+  "keywords": [
+    "platform",
+    "scaffold",
+    "cli",
+    "runtime",
+    "realtime",
+    "workflow",
+    "auth"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prsmjs/substrate.git"
+  },
+  "homepage": "https://github.com/prsmjs/substrate#readme",
+  "bugs": {
+    "url": "https://github.com/prsmjs/substrate/issues"
+  },
+  "dependencies": {
+    "@prsm/cells": "^1.0.4",
+    "@prsm/realtime": "^1.0.5",
+    "@prsm/workflow": "^2.2.0"
+  },
+  "peerDependencies": {
+    "express": "^4.0.0 || ^5.0.0"
+  },
+  "devDependencies": {
+    "express": "^5.1.0",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

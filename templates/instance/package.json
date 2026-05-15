@@ -1,0 +1,21 @@
+{
+  "name": "substrate-instance",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "new-app": "substrate new"
+  },
+  "dependencies": {
+    "@prsm/substrate": "^0.0.0",
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

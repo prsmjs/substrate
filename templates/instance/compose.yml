@@ -1,0 +1,36 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: substrate-postgres
+    platform: linux/amd64
+    environment:
+      POSTGRES_DB: substrate
+      POSTGRES_USER: substrate
+      POSTGRES_PASSWORD: substrate
+    ports:
+      - "5432:5432"
+    volumes:
+      - substrate-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U substrate -d substrate"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: substrate-redis
+    platform: linux/amd64
+    ports:
+      - "6379:6379"
+    volumes:
+      - substrate-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  substrate-postgres-data:
+  substrate-redis-data:
